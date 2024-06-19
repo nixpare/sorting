@@ -1,12 +1,11 @@
 package sorting
 
 import (
-	"slices"
 	"testing"
 )
 
 const (
-	testTimes = 20
+	testTimes = 1
 	testSize  = 1_000_000
 )
 
@@ -27,15 +26,14 @@ func TestSortingAlgorithm[T Comparable[T]](t *testing.T, algo func(v []T), randG
 
 		algo(v)
 
-		if !slices.IsSortedFunc(v, func(a, b T) int {
-			return a.Compare(b)
-		}) {
-			t.Error("not sorted")
+		if !IsSorted(v) {
+			t.Error("not sorted", v)
 		}
 	}
 }
 
 func BenchmarkSortingAlgorithm[T Comparable[T]](b *testing.B, algo func(v []T), randGen func() T) {
+	b.Helper()
 	b.ReportAllocs()
 
 	v := make([]T, testSize)

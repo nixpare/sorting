@@ -16,3 +16,15 @@ func BenchmarkMergeSort(b *testing.B) {
 		return integer(rand.Intn(testSize))
 	})
 }
+
+func TestMergeSortMulti(t *testing.T) {
+	TestSortingAlgorithm(t, MergeSortMulti, func() integer {
+		return integer(rand.Intn(testSize))
+	})
+}
+
+func BenchmarkMergeSortMulti(b *testing.B) {
+	BenchmarkSortingAlgorithm(b, MergeSortMulti, func() integer {
+		return integer(rand.Intn(testSize))
+	})
+}
