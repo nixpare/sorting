@@ -1,18 +1,13 @@
 package sorting
 
 import (
-	"math/rand"
 	"testing"
 )
 
 func TestTimSort(t *testing.T) {
-	TestSortingAlgorithm(t, TimSort, func() integer {
-		return integer(rand.Intn(testSize))
-	})
+	TestSortingAlgorithm(t, TimSort, newRandomInteger, integerSliceIsSorted)
 }
 
 func BenchmarkTimSort(b *testing.B) {
-	BenchmarkSortingAlgorithm(b, TimSort, func() integer {
-		return integer(rand.Intn(testSize))
-	})
+	BenchmarkSortingAlgorithm(b, TimSort, newRandomInteger)
 }

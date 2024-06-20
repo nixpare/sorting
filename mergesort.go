@@ -31,16 +31,16 @@ func mergeSort[T Comparable[T]](v []T, tmp []T) {
 	mergeSort(v[mid:], tmp)        // Sort right part
 	mergeSort(v[:buffer], tmp)     // Sort half of the left part
 
-	left := merge(v, buffer, mid)  // Merges the left half part with the right full part to the right
+	left := mergeInternalBuffer(v, buffer, mid)  // Merges the left half part with the right full part to the right
 	mergeSort(v[:left], tmp)       // Sort recursively the remaining left half part
 
-	mergeParts(v, left, tmp)      // Merges the 1/4 to the left with the 3/4 to the right
+	mergeExternalBuffer(v, left, tmp)      // Merges the 1/4 to the left with the 3/4 to the right
 }
 
-func merge[T Comparable[T]](v []T, buffer int, right int) int {
-	left, leftEnd := 0, buffer
+func mergeInternalBuffer[T Comparable[T]](v []T, buffer int, right int) int {
+	left := 0
 
-	for left < leftEnd && right < len(v) {
+	for buffer < right && right < len(v) {
 		if v[left].Compare(v[right]) <= 0 {
 			v[buffer], v[left] = v[left], v[buffer]
 			left++
@@ -52,20 +52,15 @@ func merge[T Comparable[T]](v []T, buffer int, right int) int {
 		buffer++
 	}
 
-	for left < leftEnd {
+	for buffer < right {
 		v[buffer], v[left] = v[left], v[buffer]
 		left++; buffer++
-	}
-
-	for right < len(v) {
-		v[buffer], v[right] = v[right], v[buffer]
-		right++; buffer++
 	}
 
 	return left
 }
 
-func mergeParts[T Comparable[T]](v []T, mid int, tmp []T) {
+func mergeExternalBuffer[T Comparable[T]](v []T, mid int, tmp []T) {
 	copy(tmp, v[:mid])
 
 	i, j, k := 0, mid, 0
@@ -91,6 +86,10 @@ func mergeParts[T Comparable[T]](v []T, mid int, tmp []T) {
 		j++; k++
 	}
 }
+
+/* func mergeInPlace[T Comparable[T]](v []T, mid int) {
+	
+} */
 
 func newBuffer[T any](v []T) []T {
 	n := len(v) / 2
@@ -150,8 +149,8 @@ func mergeSortMulti[T Comparable[T]](v []T, tmp []T, threads int) {
 		mergeSort(v[:buffer], tmp[:buffer])   // Sort half of the left part
 	}
 
-	left := merge(v, buffer, mid)                   // Merges the left half part with the right full part to the right
+	left := mergeInternalBuffer(v, buffer, mid)                   // Merges the left half part with the right full part to the right
 	mergeSortMulti(v[:left], tmp[:left], threads)   // Sort recursively the remaining left half part
 
-	mergeParts(v, left, tmp)   // Merges the 1/4 to the left with the 3/4 to the right
+	mergeExternalBuffer(v, left, tmp)   // Merges the 1/4 to the left with the 3/4 to the right
 }
