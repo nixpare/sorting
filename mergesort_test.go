@@ -4,18 +4,26 @@ import (
 	"testing"
 )
 
-func TestMergeSort(t *testing.T) {
-	TestSortingAlgorithm(t, MergeSort, newRandomInteger, integerSliceIsSorted)
+func TestMergeSortStandard(t *testing.T) {
+	testSortingAlgorithm(t, MergeSort, newRandomInteger, integerSliceIsSorted)
 }
 
-func BenchmarkMergeSort(b *testing.B) {
-	BenchmarkSortingAlgorithm(b, MergeSort, newRandomInteger)
+func BenchmarkMergeSortStandard(b *testing.B) {
+	benchmarkSortingAlgorithm(b, MergeSort, newRandomInteger)
 }
 
 func TestMergeSortMulti(t *testing.T) {
-	TestSortingAlgorithm(t, MergeSortMulti, newRandomInteger, integerSliceIsSorted)
+	testSortingAlgorithm(t, MergeSortMulti, newRandomInteger, integerSliceIsSorted)
 }
 
 func BenchmarkMergeSortMulti(b *testing.B) {
-	BenchmarkSortingAlgorithm(b, MergeSortMulti, newRandomInteger)
+	benchmarkSortingAlgorithm(b, MergeSortMulti, newRandomInteger)
+}
+
+func TestMergeSortUnstable(t *testing.T) {
+	testSortingAlgorithm(t, MergeSortUnstable, newRandomInteger, nil)
+}
+
+func BenchmarkMergeSortUnstable(b *testing.B) {
+	benchmarkSortingAlgorithm(b, MergeSortUnstable, newRandomInteger)
 }
