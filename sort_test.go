@@ -7,8 +7,10 @@ import (
 )
 
 const (
-	testTimes = 20
-	testSize  = 1_000_000
+	testTimes        = 20
+	testSize         = 1_000_000
+	reducedTestTimes = 100
+	reducedTestSize  = 48
 )
 
 type data struct {
@@ -43,6 +45,7 @@ func newRandomInteger(i int) integer {
 	return integer(data{x: x, pos: i})
 }
 
+//lint:ignore U1000 Ignore unused function used for debug/testing
 func integerSlice(v []int) []integer {
 	u := make([]integer, len(v))
 	for i := range v {
@@ -61,41 +64,48 @@ func integerSliceIsSorted(v []integer) bool {
 	return true
 }
 
-func testSortingAlgorithm[T Comparable[T]](t *testing.T, algo func(v []T), randGenFunc func(i int) T, isSortedFunc func([]T) bool) {
+func testSortingAlgorithmStandard[T Comparable[T]](t *testing.T, algo func(v []T), randGenFunc func(i int) T, isSortedFunc func([]T) bool) {
 	t.Helper()
-	v := make([]T, testSize)
+	testSortingAlgorithm(t, algo, randGenFunc, isSortedFunc, testTimes, testSize)
+}
 
-	for range testTimes {
+func testSortingAlgorithmReduced[T Comparable[T]](t *testing.T, algo func(v []T), randGenFunc func(i int) T, isSortedFunc func([]T) bool) {
+	t.Helper()
+	testSortingAlgorithm(t, algo, randGenFunc, isSortedFunc, reducedTestTimes, reducedTestSize)
+}
+
+func testSortingAlgorithm[T Comparable[T]](
+	t *testing.T, algo func(v []T),
+	randGenFunc func(i int) T, isSortedFunc func([]T) bool,
+	times int, size int,
+) {
+	v := make([]T, size)
+
+	for range times {
 		for i := range v {
 			v[i] = randGenFunc(i)
 		}
 
-		/* c := make([]T, len(v))
-		copy(c, v) */
-
 		algo(v)
 
 		if isSortedFunc != nil && !isSortedFunc(v) {
-			t.Error("not sorted"/* , c, v */)
+			t.Error("not sorted")
 		}
 	}
 }
 
-func testSortingAlgorithmSingle[T Comparable[T]](t *testing.T, v []T, algo func(v []T), isSortedFunc func([]T) bool) {
-	t.Helper()
-
-	algo(v)
-
-	if isSortedFunc != nil && !isSortedFunc(v) {
-		t.Error("not sorted")
-	}
+func benchmarkSortingAlgorithmStandard[T Comparable[T]](b *testing.B, algo func(v []T), randGenFunc func(i int) T) {
+	b.Helper()
+	benchmarkSortingAlgorithm(b, algo, randGenFunc, testSize)
 }
 
-func benchmarkSortingAlgorithm[T Comparable[T]](b *testing.B, algo func(v []T), randGenFunc func(i int) T) {
+func benchmarkSortingAlgorithmReduced[T Comparable[T]](b *testing.B, algo func(v []T), randGenFunc func(i int) T) {
 	b.Helper()
-	b.ReportAllocs()
+	benchmarkSortingAlgorithm(b, algo, randGenFunc, reducedTestSize)
+}
 
-	v := make([]T, testSize)
+func benchmarkSortingAlgorithm[T Comparable[T]](b *testing.B, algo func(v []T), randGenFunc func(i int) T, size int) {
+	v := make([]T, size)
 
 	for range b.N {
 		b.StopTimer()

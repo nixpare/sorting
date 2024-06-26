@@ -1,6 +1,6 @@
 package sorting
 
-func binarySearch[T Comparable[T]](v []T, e T) int {
+func BinarySearch[T Comparable[T]](v []T, e T) int {
 	from, to, i := 0, len(v), len(v)/2
 
 	for i >= from && i < to {

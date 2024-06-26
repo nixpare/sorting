@@ -114,7 +114,7 @@ func mergeSortUnstable[T Comparable[T]](v []T, tmp []T) {
 		}
 		return
 	case 3:
-		insertionSort(v)
+		InsertionSort(v)
 		return
 	}
 

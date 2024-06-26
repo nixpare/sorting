@@ -1,9 +1,9 @@
 package sorting
 
-// rotate is a rotation algorithm:
+// Rotate is an in-place rotation algorithm:
 //  + positive value for right rotations
 //  + negative value for left rotation
-func rotate[T any](v []T, n int) {
+func Rotate[T any](v []T, n int) {
 	if n > 0 {
 		if n < len(v) / 2 {
 			rotateRight(v, n)
