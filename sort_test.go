@@ -10,7 +10,7 @@ const (
 	testTimes        = 20
 	testSize         = 1_000_000
 	reducedTestTimes = 100
-	reducedTestSize  = 48
+	reducedTestSize  = 64
 )
 
 type data struct {

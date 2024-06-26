@@ -5,7 +5,8 @@ import (
 )
 
 var (
-	MaxSortingThreads = 64
+	MergeSortMaxSortingThreads = 64
+	MergeSortMinSliceLength    = 32
 )
 
 func MergeSort[T Comparable[T]](v []T) {
@@ -21,13 +22,12 @@ func MergeSortUnstable[T Comparable[T]](v []T) {
 }
 
 func mergeSort[T Comparable[T]](v []T, tmp []T) {
-	switch len(v) {
-	case 0, 1:
+	if len(v) <= 1 {
 		return
-	case 2:
-		if v[0].Compare(v[1]) > 0 {
-			v[0], v[1] = v[1], v[0]
-		}
+	}
+
+	if len(v) <= MergeSortMinSliceLength {
+		InsertionSort(v)
 		return
 	}
 
@@ -40,19 +40,18 @@ func mergeSort[T Comparable[T]](v []T, tmp []T) {
 }
 
 func mergeSortMulti[T Comparable[T]](v []T, tmp []T, threads int) {
-	switch len(v) {
-	case 0, 1:
+	if len(v) <= 1 {
 		return
-	case 2:
-		if v[0].Compare(v[1]) > 0 {
-			v[0], v[1] = v[1], v[0]
-		}
+	}
+
+	if len(v) <= MergeSortMinSliceLength {
+		InsertionSort(v)
 		return
 	}
 
 	mid := len(v) / 2
 
-	if threads < MaxSortingThreads {
+	if threads < MergeSortMaxSortingThreads {
 		var wg sync.WaitGroup
 		wg.Add(2)
 
@@ -105,15 +104,11 @@ func mergeExternalBuffer[T Comparable[T]](v []T, mid int, tmp []T) {
 }
 
 func mergeSortUnstable[T Comparable[T]](v []T, tmp []T) {
-	switch len(v) {
-	case 0, 1:
+	if len(v) <= 1 {
 		return
-	case 2:
-		if v[0].Compare(v[1]) > 0 {
-			v[0], v[1] = v[1], v[0]
-		}
-		return
-	case 3:
+	}
+
+	if len(v) <= MergeSortMinSliceLength {
 		InsertionSort(v)
 		return
 	}
