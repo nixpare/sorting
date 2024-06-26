@@ -10,7 +10,11 @@ var (
 )
 
 func MergeSort[T Comparable[T]](v []T) {
-	mergeSort(v, newBuffer(v, 1))
+	if len(v) <= MergeSortMinSliceLength {
+		mergeSort(v, nil)
+	} else {
+		mergeSort(v, newBuffer(v, 1))
+	}
 }
 
 func MergeSortMulti[T Comparable[T]](v []T) {
