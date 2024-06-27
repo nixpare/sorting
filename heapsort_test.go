@@ -5,9 +5,9 @@ import (
 )
 
 func TestHeapSort(t *testing.T) {
-	testSortingAlgorithmStandard(t, HeapSort, newRandomInteger, nil)
+	testSortingAlgorithmStandard[[]integer](t, HeapSort, newRandomInteger, nil)
 }
 
 func BenchmarkHeapSort(b *testing.B) {
-	benchmarkSortingAlgorithmStandard(b, HeapSort, newRandomInteger)
+	benchmarkSortingAlgorithmStandard[[]integer](b, HeapSort, newRandomInteger)
 }

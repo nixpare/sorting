@@ -10,6 +10,6 @@ func TestInsertionSort(t *testing.T) {
 
 func BenchmarkInsertionSort(b *testing.B) {
 	b.Run("Reduced", func(b *testing.B) {
-		benchmarkSortingAlgorithmReduced(b, InsertionSort, newRandomInteger)
+		benchmarkSortingAlgorithmReduced[[]integer](b, InsertionSort, newRandomInteger)
 	})
 }

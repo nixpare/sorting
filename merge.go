@@ -10,7 +10,7 @@ package sorting
 //  - detects if the two parts are already merged, resulting in a nop
 //  - detects if the two parts are swapped, reducing the number of comparisons
 //  - choses to merge from left to right or vice versa in order to reduce copies to the buffer area
-func MergeExternal[T Comparable[T]](v []T, mid int, tmp []T) {
+func MergeExternal[S ~[]E, E Ordered[E]](v S, mid int, tmp S) {
 	if v[mid-1].Compare(v[mid]) < 0 {
 		return
 	}
@@ -27,7 +27,7 @@ func MergeExternal[T Comparable[T]](v []T, mid int, tmp []T) {
 	}
 }
 
-func mergeExternalBufferFromLeft[T Comparable[T]](v []T, mid int, tmp []T) {
+func mergeExternalBufferFromLeft[S ~[]E, E Ordered[E]](v S, mid int, tmp S) {
 	copy(tmp, v[:mid])
 
 	i, j, k := 0, mid, 0
@@ -56,7 +56,7 @@ func mergeExternalBufferFromLeft[T Comparable[T]](v []T, mid int, tmp []T) {
 	}
 }
 
-func mergeExternalBufferFromRight[T Comparable[T]](v []T, mid int, tmp []T) {
+func mergeExternalBufferFromRight[S ~[]E, E Ordered[E]](v S, mid int, tmp S) {
 	n := copy(tmp, v[mid:])
 	tmp = tmp[:n]
 
@@ -98,7 +98,7 @@ func mergeExternalBufferFromRight[T Comparable[T]](v []T, mid int, tmp []T) {
 // It is optimal to use this function if the slice is made like this:
 //      v:  { [  1 / 4  ]  [  1 / 4  ]  [  1 / 2  ] }
 //       0 -^      buffer -^     right -^
-func MergeInternal[T Comparable[T]](v []T, buffer int, right int) {
+func MergeInternal[S ~[]E, E Ordered[E]](v S, buffer int, right int) {
 	left := 0
 
 	for buffer < right && right < len(v) {
@@ -125,7 +125,7 @@ func MergeInternal[T Comparable[T]](v []T, buffer int, right int) {
 // The caller must assure that the length of tmp is at least equal to
 // the shortest part of the slice.
 // For and in-place alternative, see the Rotate procedure
-func Swap[T Comparable[T]](v []T, mid int, tmp []T) {
+func Swap[S ~[]E, E Ordered[E]](v S, mid int, tmp S) {
 	if mid <= len(v)-mid {
 		n := copy(tmp, v[:mid])
 

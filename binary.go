@@ -1,6 +1,8 @@
 package sorting
 
-func BinarySearch[T Comparable[T]](v []T, e T) int {
+// BinarySearch implements the standard search algorithm over a sorted slice.
+// Returns -1 if the element was not found
+func BinarySearch[S ~[]E, E Ordered[E]](v S, e E) int {
 	from, to, i := 0, len(v), len(v)/2
 
 	for i >= from && i < to {
@@ -22,5 +24,8 @@ func BinarySearch[T Comparable[T]](v []T, e T) int {
 		i = (to + from) / 2
 	}
 
+	if from == to {
+		return -1
+	}
 	return i
 }

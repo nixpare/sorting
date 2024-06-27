@@ -6,7 +6,7 @@ package sorting
 // The algorithm chooses the shortest path, so it may decide to invert the rotation.
 // For example: if v has length 10 and it is called a right rotation of 6 places, the algorithm performs
 // a left rotation of 4 places
-func Rotate[T any](v []T, n int) {
+func Rotate[E any](v []E, n int) {
 	if n > 0 {
 		if n < len(v) / 2 {
 			rotateRight(v, n)
@@ -23,7 +23,7 @@ func Rotate[T any](v []T, n int) {
 	}
 }
 
-func rotateLeft[T any](v []T, n int) {
+func rotateLeft[E any](v []E, n int) {
 	start := 0
 	x := v[start]
 	
@@ -45,7 +45,7 @@ func rotateLeft[T any](v []T, n int) {
 	}
 }
 
-func rotateRight[T any](v []T, n int) {
+func rotateRight[E any](v []E, n int) {
 	start := 0
 	x := v[start]
 	

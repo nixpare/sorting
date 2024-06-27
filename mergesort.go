@@ -13,8 +13,9 @@ var (
 //   - the external buffer for the merge is half the slice length
 //   - for sub-slices shorter than MergeSortMinSliceLength it uses InsertionSort
 //   - other optimizations to the MergeExternal algorithm
+//
 // For a multithreaded version see MergeSortMulti
-func MergeSort[T Comparable[T]](v []T) {
+func MergeSort[S ~[]E, E Ordered[E]](v S) {
 	if len(v) <= MergeSortMinSliceLength {
 		mergeSort(v, nil)
 	} else {
@@ -22,15 +23,15 @@ func MergeSort[T Comparable[T]](v []T) {
 	}
 }
 
-func MergeSortMulti[T Comparable[T]](v []T) {
+func MergeSortMulti[S ~[]E, E Ordered[E]](v S) {
 	mergeSortMulti(v, newBuffer(v, 0), 1)
 }
 
-func MergeSortUnstable[T Comparable[T]](v []T) {
+func MergeSortUnstable[S ~[]E, E Ordered[E]](v S) {
 	mergeSortUnstable(v, newBuffer(v, 2))
 }
 
-func mergeSort[T Comparable[T]](v []T, tmp []T) {
+func mergeSort[S ~[]E, E Ordered[E]](v S, tmp S) {
 	if len(v) < 2 {
 		return
 	}
@@ -48,7 +49,7 @@ func mergeSort[T Comparable[T]](v []T, tmp []T) {
 	MergeExternal(v, mid, tmp)
 }
 
-func mergeSortMulti[T Comparable[T]](v []T, tmp []T, threads int) {
+func mergeSortMulti[S ~[]E, E Ordered[E]](v S, tmp S, threads int) {
 	if len(v) < 2 {
 		return
 	}
@@ -83,7 +84,7 @@ func mergeSortMulti[T Comparable[T]](v []T, tmp []T, threads int) {
 	MergeExternal(v, mid, tmp)
 }
 
-func mergeSortUnstable[T Comparable[T]](v []T, tmp []T) {
+func mergeSortUnstable[S ~[]E, E Ordered[E]](v S, tmp S) {
 	if len(v) < 2 {
 		return
 	}
@@ -108,9 +109,9 @@ func mergeSortUnstable[T Comparable[T]](v []T, tmp []T) {
 	MergeExternal(v, buffer, tmp)
 }
 
-func newBuffer[T any](v []T, splitTimes int) []T {
+func newBuffer[E any](v []E, splitTimes int) []E {
 	if splitTimes == 0 {
-		return make([]T, len(v))
+		return make([]E, len(v))
 	}
 
 	n := len(v) / 2
@@ -123,5 +124,5 @@ func newBuffer[T any](v []T, splitTimes int) []T {
 		n /= 2
 	}
 
-	return make([]T, n)
+	return make([]E, n)
 }

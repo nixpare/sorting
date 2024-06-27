@@ -10,14 +10,14 @@ func TestTimSort(t *testing.T) {
 
 func BenchmarkTimSort(b *testing.B) {
 	b.Run("Standard", func(b *testing.B) {
-		benchmarkSortingAlgorithmStandard(b, TimSort, newRandomInteger)
+		benchmarkSortingAlgorithmStandard[[]integer](b, TimSort, newRandomInteger)
 	})
 
 	b.Run("Reduced", func(b *testing.B) {
-		benchmarkSortingAlgorithmReduced(b, TimSort, newRandomInteger)
+		benchmarkSortingAlgorithmReduced[[]integer](b, TimSort, newRandomInteger)
 	})
 
 	b.Run("Shuffle", func(b *testing.B) {
-		benchmarkSortingAlgorithmShuffle(b, TimSort, inOrderInteger, testSize)
+		benchmarkSortingAlgorithmShuffle[[]integer](b, TimSort, inOrderInteger, testSize)
 	})
 }

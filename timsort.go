@@ -17,7 +17,7 @@ type sliceRange struct {
 // It's a work in progress: right now, considering it uses the same MergeExternal function used in
 // MergeSort, it has practically the same performance of said algorithm, with the only difference that
 // it does not uses recursion. However MergeSort still performs slightly better.
-func TimSort[T Comparable[T]](v []T) {
+func TimSort[S ~[]E, E Ordered[E]](v S) {
 	if len(v) < 2 {
 		return
 	}
@@ -77,7 +77,7 @@ func TimSort[T Comparable[T]](v []T) {
 		i = prev + 1
 	}
 
-	tmp := make([]T, len(v))
+	tmp := make([]E, len(v))
 
 	for j := 0; len(runs) > 1; j++ {
 		i := 0
