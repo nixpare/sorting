@@ -88,6 +88,14 @@ func mergeExternalBuffer[T Comparable[T]](v []T, mid int, tmp []T) {
 		return
 	}
 	
+	if mid <= len(v) - mid {
+		mergeExternalBufferFromLeft(v, mid, tmp)
+	} else {
+		mergeExternalBufferFromRight(v, mid, tmp)
+	}
+}
+
+func mergeExternalBufferFromLeft[T Comparable[T]](v []T, mid int, tmp []T) {
 	copy(tmp, v[:mid])
 
 	i, j, k := 0, mid, 0
@@ -113,6 +121,36 @@ func mergeExternalBuffer[T Comparable[T]](v []T, mid int, tmp []T) {
 		v[k] = v[j]
 		j++
 		k++
+	}
+}
+
+func mergeExternalBufferFromRight[T Comparable[T]](v []T, mid int, tmp []T) {
+	n := copy(tmp, v[mid:])
+	tmp = tmp[:n]
+
+	i, j, k := mid-1, len(tmp)-1, len(v)-1
+	for i >= 0 && j >= 0 {
+		if v[i].Compare(tmp[j]) > 0 {
+			v[k] = v[i]
+			i--
+		} else {
+			v[k] = tmp[j]
+			j--
+		}
+
+		k--
+	}
+
+	for i >= 0 {
+		v[k] = v[i]
+		i--
+		k--
+	}
+
+	for j >= 0 {
+		v[k] = tmp[j]
+		j--
+		k--
 	}
 }
 
