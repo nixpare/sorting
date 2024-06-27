@@ -1,5 +1,7 @@
 package sorting
 
+// HeapSort is a standard implementation of the algorithm, without using
+// additional space.
 func HeapSort[T Comparable[T]](v []T) {
 	createHeap(v)
 	for i := len(v)-1; i > 0; i-- {

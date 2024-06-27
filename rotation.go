@@ -1,8 +1,11 @@
 package sorting
 
-// Rotate is an in-place rotation algorithm:
-//  + positive value for right rotations
-//  + negative value for left rotation
+// Rotate is an in-place not stable rotation algorithm:
+//  + positive value for right rotations (from left to right, looping from the end back to the start)
+//  + positive value for left rotations (from right to left, looping from the start to the end)
+// The algorithm chooses the shortest path, so it may decide to invert the rotation.
+// For example: if v has length 10 and it is called a right rotation of 6 places, the algorithm performs
+// a left rotation of 4 places
 func Rotate[T any](v []T, n int) {
 	if n > 0 {
 		if n < len(v) / 2 {
