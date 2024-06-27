@@ -121,7 +121,7 @@ func benchmarkSortingAlgorithm[S ~[]E, E Ordered[E]](b *testing.B, algo func(v S
 	}
 }
 
-var shuffles = [...]int{ 90, 60, 20, 1 }
+var shuffles = [...]int{ 90, 60, 20, 5, 0 }
 
 func benchmarkSortingAlgorithmShuffle[S ~[]E, E Ordered[E]](b *testing.B, algo func(v S), inOrderFunc func(i int) E, size int) {
 	v := make([]E, size)
