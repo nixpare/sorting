@@ -9,12 +9,12 @@ func TestMergeSort(t *testing.T) {
 }
 
 func BenchmarkMergeSort(b *testing.B) {
-	b.Run("Standard", func(b *testing.B) {
-		benchmarkSortingAlgorithmStandard[[]integer](b, MergeSort, newRandomInteger)
-	})
-
 	b.Run("Reduced", func(b *testing.B) {
 		benchmarkSortingAlgorithmReduced[[]integer](b, MergeSort, newRandomInteger)
+	})
+
+	b.Run("Standard", func(b *testing.B) {
+		benchmarkSortingAlgorithmStandard[[]integer](b, MergeSort, newRandomInteger)
 	})
 
 	b.Run("Shuffle", func(b *testing.B) {
@@ -27,7 +27,17 @@ func TestMergeSortMulti(t *testing.T) {
 }
 
 func BenchmarkMergeSortMulti(b *testing.B) {
-	benchmarkSortingAlgorithmStandard[[]integer](b, MergeSortMulti, newRandomInteger)
+	b.Run("Reduced", func(b *testing.B) {
+		benchmarkSortingAlgorithmReduced[[]integer](b, MergeSortMulti, newRandomInteger)
+	})
+
+	b.Run("Standard", func(b *testing.B) {
+		benchmarkSortingAlgorithmStandard[[]integer](b, MergeSortMulti, newRandomInteger)
+	})
+
+	b.Run("Shuffle", func(b *testing.B) {
+		benchmarkSortingAlgorithmShuffle[[]integer](b, MergeSortMulti, inOrderInteger, testSize)
+	})
 }
 
 func TestMergeSortUnstable(t *testing.T) {
@@ -35,5 +45,15 @@ func TestMergeSortUnstable(t *testing.T) {
 }
 
 func BenchmarkMergeSortUnstable(b *testing.B) {
-	benchmarkSortingAlgorithmStandard[[]integer](b, MergeSortUnstable, newRandomInteger)
+	b.Run("Reduced", func(b *testing.B) {
+		benchmarkSortingAlgorithmReduced[[]integer](b, MergeSortUnstable, newRandomInteger)
+	})
+
+	b.Run("Standard", func(b *testing.B) {
+		benchmarkSortingAlgorithmStandard[[]integer](b, MergeSortUnstable, newRandomInteger)
+	})
+
+	b.Run("Shuffle", func(b *testing.B) {
+		benchmarkSortingAlgorithmShuffle[[]integer](b, MergeSortUnstable, inOrderInteger, testSize)
+	})
 }

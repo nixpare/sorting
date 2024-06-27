@@ -9,5 +9,15 @@ func TestHeapSort(t *testing.T) {
 }
 
 func BenchmarkHeapSort(b *testing.B) {
-	benchmarkSortingAlgorithmStandard[[]integer](b, HeapSort, newRandomInteger)
+	b.Run("Reduced", func(b *testing.B) {
+		benchmarkSortingAlgorithmReduced[[]integer](b, HeapSort, newRandomInteger)
+	})
+
+	b.Run("Standard", func(b *testing.B) {
+		benchmarkSortingAlgorithmStandard[[]integer](b, HeapSort, newRandomInteger)
+	})
+
+	b.Run("Shuffle", func(b *testing.B) {
+		benchmarkSortingAlgorithmShuffle[[]integer](b, HeapSort, inOrderInteger, testSize)
+	})
 }
