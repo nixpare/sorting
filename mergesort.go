@@ -26,7 +26,7 @@ func MergeSortUnstable[T Comparable[T]](v []T) {
 }
 
 func mergeSort[T Comparable[T]](v []T, tmp []T) {
-	if len(v) <= 1 {
+	if len(v) < 2 {
 		return
 	}
 
@@ -44,7 +44,7 @@ func mergeSort[T Comparable[T]](v []T, tmp []T) {
 }
 
 func mergeSortMulti[T Comparable[T]](v []T, tmp []T, threads int) {
-	if len(v) <= 1 {
+	if len(v) < 2 {
 		return
 	}
 
@@ -79,6 +79,15 @@ func mergeSortMulti[T Comparable[T]](v []T, tmp []T, threads int) {
 }
 
 func mergeExternalBuffer[T Comparable[T]](v []T, mid int, tmp []T) {
+	if v[mid-1].Compare(v[mid]) < 0 {
+		return
+	}
+
+	if v[0].Compare(v[len(v)-1]) > 0 {
+		swap(v, mid, tmp)
+		return
+	}
+	
 	copy(tmp, v[:mid])
 
 	i, j, k := 0, mid, 0
@@ -108,7 +117,7 @@ func mergeExternalBuffer[T Comparable[T]](v []T, mid int, tmp []T) {
 }
 
 func mergeSortUnstable[T Comparable[T]](v []T, tmp []T) {
-	if len(v) <= 1 {
+	if len(v) < 2 {
 		return
 	}
 
@@ -151,6 +160,30 @@ func mergeInternalBuffer[T Comparable[T]](v []T, buffer int, right int) {
 		v[buffer], v[left] = v[left], v[buffer]
 		left++
 		buffer++
+	}
+}
+
+func swap[T Comparable[T]](v []T, mid int, tmp []T) {
+	if mid <= len(v) - mid {
+		n := copy(tmp, v[:mid])
+		
+		i := 0
+		for j := mid; j < len(v); j++ {
+			v[i], v[j] = v[j], v[i]
+			i++
+		}
+
+		copy(v[i:], tmp[:n])
+	} else {
+		n := copy(tmp, v[mid:])
+		
+		i := len(v)-1
+		for j := mid-1; j >= 0; j-- {
+			v[i], v[j] = v[j], v[i]
+			i--
+		}
+
+		copy(v[:i], tmp[:n])
 	}
 }
 

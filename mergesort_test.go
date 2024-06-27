@@ -16,6 +16,10 @@ func BenchmarkMergeSort(b *testing.B) {
 	b.Run("Reduced", func(b *testing.B) {
 		benchmarkSortingAlgorithmReduced(b, MergeSort, newRandomInteger)
 	})
+
+	b.Run("Shuffle", func(b *testing.B) {
+		benchmarkSortingAlgorithmShuffle(b, MergeSort, inOrderInteger, testSize)
+	})
 }
 
 func TestMergeSortMulti(t *testing.T) {

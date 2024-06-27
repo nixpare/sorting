@@ -45,6 +45,10 @@ func newRandomInteger(i int) integer {
 	return integer(data{x: x, pos: i})
 }
 
+func inOrderInteger(i int) integer {
+	return integer(data{x: i, pos: i})
+}
+
 //lint:ignore U1000 Ignore unused function used for debug/testing
 func integerSlice(v []int) []integer {
 	u := make([]integer, len(v))
@@ -115,5 +119,34 @@ func benchmarkSortingAlgorithm[T Comparable[T]](b *testing.B, algo func(v []T), 
 		b.StartTimer()
 
 		algo(v)
+	}
+}
+
+var shuffles = [...]int{ 99, 90, 80, 60, 30, 10, 1 }
+
+func benchmarkSortingAlgorithmShuffle[T Comparable[T]](b *testing.B, algo func(v []T), inOrderFunc func(i int) T, size int) {
+	v := make([]T, size)
+	for i := range v {
+		v[i] = inOrderFunc(i)
+	}
+
+	for _, shuffle := range shuffles {
+		times := size / 100 * shuffle
+		
+		b.Run(fmt.Sprintf("%d%%", shuffle), func(b *testing.B) {
+			for range b.N {
+				b.StopTimer()
+
+				prev := rand.Intn(size)
+				for range times {
+					next := rand.Intn(size)
+					v[prev], v[next] = v[next], v[prev]
+					prev = next
+				}
+				b.StartTimer()
+		
+				algo(v)
+			}
+		})
 	}
 }
