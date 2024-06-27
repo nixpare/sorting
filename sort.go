@@ -1,4 +1,4 @@
-// A collection of modified sorting algorithms for Go
+// A collection of optimized sorting algorithms for Go
 package sorting
 
 type Ordered[E any] interface {
