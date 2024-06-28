@@ -1,5 +1,9 @@
 package sorting
 
+var (
+	InsertionSortSliceLength = 32
+)
+
 // InsertionSort is a standard implementation of the algorithm
 func InsertionSort[S ~[]E, E Ordered[E]](v S) {
 	for i := 1; i < len(v); i++ {

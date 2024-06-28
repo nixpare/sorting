@@ -4,10 +4,6 @@ import (
 	"slices"
 )
 
-var (
-	TimSortRun = 32
-)
-
 // TimSort is a simple implementation of the original algorithm, it is stable and not in-place.
 // It's a work in progress: right now, considering it uses the same MergeExternal function used in
 // MergeSort, it has practically the same performance of said algorithm, with the only difference that
@@ -28,12 +24,12 @@ func TimSort[S ~[]E, E Ordered[E]](v S) {
 				continue
 			}
 
-			if i-prev >= TimSortRun {
+			if i-prev >= InsertionSortSliceLength {
 				slices.Reverse(v[prev:i])
 				runs = append(runs, i)
 				prev = i
 			} else {
-				to := min(prev+TimSortRun, len(v))
+				to := min(prev+InsertionSortSliceLength, len(v))
 
 				InsertionSort(v[prev:to])
 				runs = append(runs, to)
@@ -45,11 +41,11 @@ func TimSort[S ~[]E, E Ordered[E]](v S) {
 				continue
 			}
 
-			if i-prev >= TimSortRun {
+			if i-prev >= InsertionSortSliceLength {
 				runs = append(runs, i)
 				prev = i
 			} else {
-				to := min(prev+TimSortRun, len(v))
+				to := min(prev+InsertionSortSliceLength, len(v))
 
 				InsertionSort(v[prev:to])
 				runs = append(runs, to)

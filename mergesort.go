@@ -6,7 +6,6 @@ import (
 
 var (
 	MergeSortMaxSortingThreads = 64
-	MergeSortMinSliceLength    = 32
 )
 
 // MergeSort is based on the traditional algorithm with a few optimizations:
@@ -16,7 +15,7 @@ var (
 //
 // For a multithreaded version see MergeSortMulti
 func MergeSort[S ~[]E, E Ordered[E]](v S) {
-	if len(v) <= MergeSortMinSliceLength {
+	if len(v) <= InsertionSortSliceLength {
 		mergeSort(v, nil)
 	} else {
 		mergeSort(v, newBuffer(v, 1))
@@ -36,7 +35,7 @@ func mergeSort[S ~[]E, E Ordered[E]](v S, tmp S) {
 		return
 	}
 
-	if len(v) <= MergeSortMinSliceLength {
+	if len(v) <= InsertionSortSliceLength {
 		InsertionSort(v)
 		return
 	}
@@ -54,7 +53,7 @@ func mergeSortMulti[S ~[]E, E Ordered[E]](v S, tmp S, threads int) {
 		return
 	}
 
-	if len(v) <= MergeSortMinSliceLength {
+	if len(v) <= InsertionSortSliceLength {
 		InsertionSort(v)
 		return
 	}
@@ -89,7 +88,7 @@ func mergeSortUnstable[S ~[]E, E Ordered[E]](v S, tmp S) {
 		return
 	}
 
-	if len(v) <= MergeSortMinSliceLength {
+	if len(v) <= InsertionSortSliceLength {
 		InsertionSort(v)
 		return
 	}
