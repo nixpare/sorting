@@ -3,6 +3,7 @@ package sorting
 import (
 	"fmt"
 	"math/rand"
+	"slices"
 	"testing"
 )
 
@@ -67,19 +68,19 @@ func integerSliceIsSorted(v []integer) bool {
 	return true
 }
 
-func testSortingAlgorithmStandard[S ~[]E, E Ordered[E]](t *testing.T, algo func(v S), randGenFunc func(i int) E, isSortedFunc func(S) bool) {
+func testSortingAlgorithmStandard[S ~[]E, E Ordered[E]](t *testing.T, algo func(v S), randGenFunc func(i int) E, isStableSortedFunc func(S) bool) {
 	t.Helper()
-	testSortingAlgorithm(t, algo, randGenFunc, isSortedFunc, testTimes, testSize)
+	testSortingAlgorithm(t, algo, randGenFunc, isStableSortedFunc, testTimes, testSize)
 }
 
-func testSortingAlgorithmReduced[S ~[]E, E Ordered[E]](t *testing.T, algo func(v S), randGenFunc func(i int) E, isSortedFunc func(S) bool) {
+func testSortingAlgorithmReduced[S ~[]E, E Ordered[E]](t *testing.T, algo func(v S), randGenFunc func(i int) E, isStableSortedFunc func(S) bool) {
 	t.Helper()
-	testSortingAlgorithm(t, algo, randGenFunc, isSortedFunc, reducedTestTimes, reducedTestSize)
+	testSortingAlgorithm(t, algo, randGenFunc, isStableSortedFunc, reducedTestTimes, reducedTestSize)
 }
 
 func testSortingAlgorithm[S ~[]E, E Ordered[E]](
 	t *testing.T, algo func(v S),
-	randGenFunc func(i int) E, isSortedFunc func(S) bool,
+	randGenFunc func(i int) E, isStableSortedFunc func(S) bool,
 	times int, size int,
 ) {
 	v := make([]E, size)
@@ -91,8 +92,14 @@ func testSortingAlgorithm[S ~[]E, E Ordered[E]](
 
 		algo(v)
 
-		if isSortedFunc != nil && !isSortedFunc(v) {
-			t.Error("not sorted")
+		if isStableSortedFunc != nil {
+			if !isStableSortedFunc(v) {
+				t.Error("not sorted")
+			}
+		} else {
+			if !IsSorted(v) {
+				t.Error("not sorted")
+			}
 		}
 	}
 }
@@ -148,4 +155,44 @@ func benchmarkSortingAlgorithmShuffle[S ~[]E, E Ordered[E]](b *testing.B, algo f
 			}
 		})
 	}
+}
+
+func BenchmarkGoDefaultStable(b *testing.B) {
+	algo := func(v []integer) {
+		slices.SortStableFunc(v, func(a, b integer) int {
+			return a.Compare(b)
+		})
+	}
+
+	b.Run("Reduced", func(b *testing.B) {
+		benchmarkSortingAlgorithmReduced[[]integer](b, algo, newRandomInteger)
+	})
+
+	b.Run("Standard", func(b *testing.B) {
+		benchmarkSortingAlgorithmStandard[[]integer](b, algo, newRandomInteger)
+	})
+
+	b.Run("Shuffle", func(b *testing.B) {
+		benchmarkSortingAlgorithmShuffle[[]integer](b, algo, inOrderInteger, testSize)
+	})
+}
+
+func BenchmarkGoDefault(b *testing.B) {
+	algo := func(v []integer) {
+		slices.SortFunc(v, func(a, b integer) int {
+			return a.Compare(b)
+		})
+	}
+
+	b.Run("Reduced", func(b *testing.B) {
+		benchmarkSortingAlgorithmReduced[[]integer](b, algo, newRandomInteger)
+	})
+
+	b.Run("Standard", func(b *testing.B) {
+		benchmarkSortingAlgorithmStandard[[]integer](b, algo, newRandomInteger)
+	})
+
+	b.Run("Shuffle", func(b *testing.B) {
+		benchmarkSortingAlgorithmShuffle[[]integer](b, algo, inOrderInteger, testSize)
+	})
 }
